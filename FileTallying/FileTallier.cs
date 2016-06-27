@@ -3,11 +3,11 @@
 namespace TierTypeTallier.FileTallying
 {
     /// <summary>
-    /// Represents a file type counter, intended to assess the file composition of a directory
+    /// Represents a file type counter, intended to assess the file composition of a directory.
     /// </summary>
-    partial class FileTallier : IDisposable
+    internal partial class FileTallier : IDisposable
     {
-        private readonly FileTypeTallierWorker _worker = new FileTypeTallierWorker();
+        private readonly FileTypeTallierWorker worker = new FileTypeTallierWorker();
 
         /// <summary>
         /// Occurs when the tallier has completed (includes after cancellation).
@@ -24,49 +24,50 @@ namespace TierTypeTallier.FileTallying
         /// </summary>
         public FileTallier()
         {
-            _worker.WorkerSupportsCancellation = true;
-            _worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.WorkerReportsProgress = true;
 
-            _worker.ProgressChanged += (sender, args) =>
+            worker.ProgressChanged += (sender, args) =>
                 ProgressReport(this, (int) args.UserState);
 
-            _worker.RunWorkerCompleted += (sender, args) =>
+            worker.RunWorkerCompleted += (sender, args) =>
                 TallierCompleted(this, (FileTallierResults)args.Result);
         }
 
         /// <summary>
-        /// Runs the tallier asyncronously
+        /// Runs the tallier asynchronously.
         /// </summary>
-        /// <param name="dir">The directory to tally up</param>
-        /// <param name="reportFreq">How many files to iterate before reporting progress</param>
+        /// <param name="dir">The directory to tally up.</param>
+        /// <param name="reportFreq">How many files to iterate before reporting progress.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void RunAsync(string dir, int reportFreq)
         {
             if (reportFreq < 1)
-                throw new ArgumentOutOfRangeException("reportFreq");
+                throw new ArgumentOutOfRangeException(nameof(reportFreq));
 
             RunAsync(new FileTallierParams(dir, reportFreq));
         }
 
         /// <summary>
-        /// Runs the tallier asyncronously.
+        /// Runs the tallier asynchronously.
         /// </summary>
         /// <param name="p">Specifies the desired behavior for the tallier.</param>
         public void RunAsync(FileTallierParams p)
         {
-            _worker.RunWorkerAsync(p);
+            worker.RunWorkerAsync(p);
         }
 
         /// <summary>
-        /// Cancels the running asyncronous operation
+        /// Cancels the running asynchronous operation
         /// </summary>
         public void CancelAsync()
         {
-            _worker.CancelAsync();
+            worker.CancelAsync();
         }
 
         public void Dispose()
         {
-            _worker.Dispose();
+            worker.Dispose();
         }
     }
 }

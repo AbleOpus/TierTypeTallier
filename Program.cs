@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using TierTypeTallier.Forms;
 using TierTypeTallier.Properties;
-using TierTypeTallier.Views;
 
 namespace TierTypeTallier
 {

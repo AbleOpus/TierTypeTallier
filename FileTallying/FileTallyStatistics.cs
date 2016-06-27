@@ -4,22 +4,22 @@ using System.Linq;
 namespace TierTypeTallier.FileTallying
 {
     /// <summary>
-    /// Represents statistics for an array of <see cref="FileTally"/>
+    /// Represents statistics for an array of <see cref="FileTally"/>.
     /// </summary>
     public class FileTallyStatistics
     {
-        private readonly FileTally[] _tallies;
+        private readonly FileTally[] tallies;
 
         #region Properties
         /// <summary>
-        /// Gets the longest extension among the FileTallys
+        /// Gets the longest extension among the FileTallys.
         /// </summary>
         public string LongestExtension
         {
             get
             {
                 string longest = string.Empty;
-                foreach (var tally in _tallies)
+                foreach (var tally in tallies)
                 {
                     if (tally.Extension.Length > longest.Length)
                         longest = tally.Extension;
@@ -29,7 +29,7 @@ namespace TierTypeTallier.FileTallying
         }
 
         /// <summary>
-        /// Gets the FileTally with the highest file count
+        /// Gets the FileTally with the highest file count.
         /// </summary>
         public FileTally HighestQuantity
         {
@@ -37,7 +37,7 @@ namespace TierTypeTallier.FileTallying
             {
                 FileTally highest = null;
 
-                foreach (var tally in _tallies)
+                foreach (var tally in tallies)
                 {
                     if (highest == null || tally.Count > highest.Count)
                         highest = tally;
@@ -47,15 +47,15 @@ namespace TierTypeTallier.FileTallying
         }
 
         /// <summary>
-        /// Gets the average quantity
+        /// Gets the average quantity.
         /// </summary>
         public int MeanQuantity
         {
-            get { return _tallies.Sum(t => t.Count) / _tallies.Length; }
+            get { return tallies.Sum(t => t.Count) / tallies.Length; }
         }
 
         /// <summary>
-        /// Gets the total amount of compressed/packaged files
+        /// Gets the total amount of compressed/packaged files.
         /// </summary>
         public int CompressedFileCount
         {
@@ -65,38 +65,39 @@ namespace TierTypeTallier.FileTallying
                     "arc .ace .arj .as .b64 .btoa .bz .cab .cpt .gz .hqx .iso .lha .lzh .mim .mme "
                     +".pak .pf .rar .sea .sit .sitx .targz .tbz .tbz2 .tgz .uu .uue .z .zip .zoo";
                 string[] extensions = COMPRESSED_EXT.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-                return _tallies.Count(tally => extensions.Any(t => tally.Extension == t));
+                return tallies.Count(tally => extensions.Any(t => tally.Extension == t));
             }
         }
 
         /// <summary>
-        /// Gets the files that have no extension
+        /// Gets the files that have no extension.
         /// </summary>
         public int NoExtensionCount
         {
             get
             {
-                var tally = _tallies.FirstOrDefault(t => t.Extension.Length == 0);
+                var tally = tallies.FirstOrDefault(t => t.Extension.Length == 0);
                 return tally == null ? 0 : tally.Count;
             }
         }
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of <see cref="FileTallyStatistics"/> with the specified <seealso cref="FileTally"/> array
+        /// Initializes a new instance of <see cref="FileTallyStatistics"/> 
+        /// with the specified argument.
         /// </summary>
-        /// <param name="tallies">The tallies to generate statistics for</param>
+        /// <param name="tallies">The tallies to generate statistics for.</param>
         public FileTallyStatistics(FileTally[] tallies)
         {
-            _tallies = tallies;
+            this.tallies = tallies;
         }
 
         /// <summary>
-        /// Gets a quantitative percent, of the tally specified in relation to the other 
+        /// Gets a quantitative percent, of the tally specified in relation to the other.
         /// </summary>
         public double GetPercent(FileTally tally)
         {
-            return (double)tally.Count / _tallies.Sum(t => t.Count) * 100;
+            return (double)tally.Count / tallies.Sum(t => t.Count) * 100;
         }
     }
 }
